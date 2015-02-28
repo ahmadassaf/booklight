@@ -35,7 +35,7 @@ function init() {
 function start() {
 	booklight_box.show();
 	searchBar.val('').focus();
-	focusItem(0);
+	focusItem($('.booklight_list li:visible').first().index());
 
 	searchBar.on('input',function() {
 
@@ -44,30 +44,34 @@ function start() {
 		bookmarksList.find('li:contains(' + filter +')').show();
 
 		statusBar.text(bookmarksList.find('li:visible').length + " matching results");
-
+		focusItem($('.booklight_list li:visible').first().index());
 	});
 }
 
 function moveInList(direction) {
 
-	var index        = $('.booklight_list li').index($('li.activeFolder'));
-	var results      = bookmarksList.find('li:visible');
-	var resutsNumber = results.length;
+	var index             = $('.booklight_list li.activeFolder').index();
+	var results           = bookmarksList.find('li:visible');
+	var resutsNumber      = results.length;
 
-	$('li.activeFolder').removeClass('activeFolder');
+	var firstElementIndex = $('.booklight_list li:visible').first().index();
+	var lastElementIndex  = $('.booklight_list li:visible').last().index();
 
 	switch (direction) {
 		case ('DOWN') : {
-			index !== resutsNumber ? focusItem(index+1) : focusItem(0);
+			index !== lastElementIndex ? focusItem($('.booklight_list li:visible.activeFolder').nextAll('li:visible').first().index()) : focusItem(firstElementIndex);
 		} break;
 		case ('UP') : {
-			index !== resutsNumber ? focusItem(index-1): focusItem(resutsNumber);
+			index !== firstElementIndex ? focusItem($('.booklight_list li:visible.activeFolder').prevAll('li:visible').first().index()) : focusItem(lastElementIndex);
 		} break;
 	}
 }
 
 function focusItem(index) {
-	var element = $('.booklight_list').find('li:visible').eq(index);
+
+	$('li.activeFolder').removeClass('activeFolder');
+
+	var element = $('.booklight_list li').eq(index);
 	// Highlight the first result element
 	element.addClass('activeFolder');
 	element[0].scrollIntoView(false);
