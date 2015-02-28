@@ -5,13 +5,17 @@ var searchBar     = $('.booklight>input');
 var bookmarksList = $('.booklight_list');
 var statusBar     = $('.booklight_status');
 
+// The stack that will hold the navigation of the main elements and their subfolders
+var elementStack  = [];
+
 // multiple shortcuts that do the same thing
 key('control+b, ctrl+b', function(){ start(); });
-key('esc, escape', function(){ booklight_box.hide(); });
+key('esc, escape', function(){ close(); });
 key('enter', 'input', function(){ console.log("ENTER"); });
 key('up', 'input', function(){ moveInList("UP") });
 key('down', 'input', function(){ moveInList("DOWN") });
-key('right', 'input', function(){ console.log("RIGHT"); });
+key('right', 'input', function(){ moveInList("RIGHT") });
+key('left', 'input', function(){ moveInList("LEFT") });
 
 function init() {
 
@@ -25,17 +29,22 @@ function init() {
 	chrome.storage.local.get("booklight", function(bookmarks) {
 		statusBar.text(bookmarks.booklight.length + " folders found");
 		bookmarks.booklight.forEach(function(bookmark){
-			var elem = $('<li>', { text: bookmark.title, id: bookmark.id });
-			if (!bookmark.folder) elem.addClass('isfolder');
+			var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
+			if (!bookmark.folder) elem.addClass('isFolder');
 			bookmarksList.append(elem);
 		});
 	});
+
+	// attach the events on the mouse clicks
+	// $('body').on('click','.booklight_list li', function(){ focusItem($(this).index(), null, true)
+	// }).on('dblclick', function(){ if ($(this).hasClass('isFolder')) expandFolder($(this)) });
+
 }
 
 function start() {
 	booklight_box.show();
 	searchBar.val('').focus();
-	focusItem($('.booklight_list li:visible').first().index());
+	higlightFirstElement();
 
 	searchBar.on('input',function() {
 
@@ -43,14 +52,15 @@ function start() {
 		bookmarksList.find('li').hide();
 		bookmarksList.find('li:contains(' + filter +')').show();
 
-		statusBar.text(bookmarksList.find('li:visible').length + " matching results");
-		focusItem($('.booklight_list li:visible').first().index());
+		updateCounter();
+		higlightFirstElement();
 	});
 }
 
 function moveInList(direction) {
 
-	var index             = $('.booklight_list li.activeFolder').index();
+	var element 					= $('.booklight_list li.activeFolder');
+	var index             = element.index();
 	var results           = bookmarksList.find('li:visible');
 	var resutsNumber      = results.length;
 
@@ -64,19 +74,79 @@ function moveInList(direction) {
 		case ('UP') : {
 			index !== firstElementIndex ? focusItem($('.booklight_list li:visible.activeFolder').prevAll('li:visible').first().index()) : focusItem(lastElementIndex);
 		} break;
+		case ('RIGHT') : {
+			if (element.hasClass('isFolder')) expandFolder(element);
+		} break;
+		case ('LEFT') : {
+			if (elementStack.length) goFolderBack();
+		} break;
 	}
 }
 
-function focusItem(index) {
+function higlightFirstElement(text) {
+	focusItem($('.booklight_list li:visible').first().index(), text);
+}
 
+function close() {
+	booklight_box.hide();
+	$('.booklight_list li').show();
+}
+
+function updateCounter() {
+	statusBar.text(bookmarksList.find('li:visible').length + " matching results");
+}
+
+function goFolderBack() {
+
+	var placeholderText = searchBar.attr('placeholder');
+
+	$('.booklight_list li').hide();
+	elementStack.pop().show();
+	higlightFirstElement();
+	updateCounter();
+
+	searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
+}
+
+function expandFolder(element) {
+
+	var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
+	// save the current view in the elements stack
+	elementStack.push($('.booklight_list li:visible'));
+	// hide the current list of elements
+	$('.booklight_list li').hide();
+	// Only display the subset which is the children
+	children.show();
+	// highlight the first element of the results
+	higlightFirstElement(true);
+	// update the match text counter
+	updateCounter();
+}
+
+function focusItem(index, subFolder, isMouse) {
+	console.log(isMouse);
 	$('li.activeFolder').removeClass('activeFolder');
 
-	var element = $('.booklight_list li').eq(index);
+	var element         = $('.booklight_list li').eq(index);
+	var placeholderText = element.text();
+
+	if (subFolder){
+		placeholderText = searchBar.attr('placeholder') + ' > ' + element.text();
+	} else if (searchBar.attr('placeholder').indexOf('>') !== -1) {
+		var chunkedPlaceHolder = searchBar.attr('placeholder').split('>');
+		placeholderText = searchBar.attr('placeholder').replace(chunkedPlaceHolder[chunkedPlaceHolder.length - 1], ' ' + element.text());
+	}
+
 	// Highlight the first result element
 	element.addClass('activeFolder');
-	element[0].scrollIntoView(false);
+	if (!isMouse) element[0].scrollIntoView(false);
 	// Make the placeholder as the first element
-	searchBar.attr('placeholder',element.text());
+	searchBar.attr('placeholder', placeholderText);
+}
+
+// replace a string at a certain range with another string
+function replaceRange(s, start, end, substitute) {
+    return s.substring(0, start) + substitute + s.substring(end);
 }
 
 // Overriding the filter function to make it work on the input boxes
