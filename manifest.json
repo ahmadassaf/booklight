@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "css": ["booklight.css"],
+      "css": ["css/booklight.css", "css/fontello.css"],
       "js": [
         "lib/jquery.js",
         "lib/hideSeek.js",
@@ -38,8 +38,13 @@
     }
   ],
   "web_accessible_resources": [
-    "booklight.css",
-    "lib/keymaster.js"
+    "css/booklight.css",
+    "css/fontello.css",
+    "lib/keymaster.js",
+    "font/fontello.eot",
+    "font/fontello.svg",
+    "font/fontello.ttf",
+    "font/fontello.woff"
   ],
 
   "permissions": [

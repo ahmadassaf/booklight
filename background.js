@@ -1,7 +1,7 @@
 var foldersList   = [],  urls = [];
 
 chrome.bookmarks.getTree(function(bookmarksTree) {
-console.log(bookmarksTree);
+
 	foldersList = filterRecursively(bookmarksTree, "children", function(node) {
 			if (node.url) urls.push(node);
 			return !node.url && node.id > 0;
@@ -35,3 +35,12 @@ function isLeaf(node) {
 	var isLeaf = leafyNodes.length == node.children.length ? true : false;
 	return isLeaf;
 }
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendrequest) {
+		if (request.message == "booklight") {
+			console.log("adding: " + request.url + " title: " + request.title + " to folder id: " + request.folder);
+			chrome.bookmarks.create({ 'parentId': request.folder, 'title': request.title, 'url': request.url });
+			sendrequest({message: "success"});
+		}
+	});

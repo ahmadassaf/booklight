@@ -11,7 +11,7 @@ var elementStack  = [];
 // multiple shortcuts that do the same thing
 key('control+b, ctrl+b', function(){ start(); });
 key('esc, escape', function(){ close(); });
-key('enter', 'input', function(){ console.log("ENTER"); });
+key('enter', 'input', function(){ addBookmark(window.location.href, document.title, $('.booklight_list li.activeFolder').attr('id')) });
 key('up', 'input', function(){ moveInList("UP") });
 key('down', 'input', function(){ moveInList("DOWN") });
 key('right', 'input', function(){ moveInList("RIGHT") });
@@ -22,6 +22,7 @@ function init() {
 	// Append the search lightbox to the body DOM element
 	$('body').append('<div class="booklight">'+
 		'<input id="ahmad" placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
+		'<span class="isBooklit icon-star"></span>'+
 		'<span class="booklight_status"></span>' +
 		'<ul class="booklight_list"></ul></div>');
 
@@ -54,6 +55,14 @@ function start() {
 
 		updateCounter();
 		higlightFirstElement();
+	});
+}
+
+function addBookmark(url, title, folder) {
+	chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
+  	if (response.message == "success"){
+  		$('span.isBooklit').show();
+  	}
 	});
 }
 
@@ -124,7 +133,7 @@ function expandFolder(element) {
 }
 
 function focusItem(index, subFolder, isMouse) {
-	console.log(isMouse);
+
 	$('li.activeFolder').removeClass('activeFolder');
 
 	var element         = $('.booklight_list li').eq(index);
