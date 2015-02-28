@@ -3,7 +3,8 @@ init();
 var booklight_box = $('.booklight');
 var searchBar     = $('.booklight>input');
 var bookmarksList = $('.booklight_list');
-var statusBar     = $('.booklight_status');
+var resultBar     = $('.booklight_resultsbar');
+var statusBar     = $('.booklight_statusbar');
 
 // The stack that will hold the navigation of the main elements and their subfolders
 var elementStack  = [];
@@ -23,12 +24,13 @@ function init() {
 	$('body').append('<div class="booklight">'+
 		'<input id="ahmad" placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
 		'<span class="isBooklit icon-star"></span>'+
-		'<span class="booklight_status"></span>' +
-		'<ul class="booklight_list"></ul></div>');
+		'<span class="booklight_resultsbar"></span>' +
+		'<ul class="booklight_list"></ul>'+
+		'<div class="booklight_statusbar"></div></div>');
 
 	// Get the bookmarks from the local storage
 	chrome.storage.local.get("booklight", function(bookmarks) {
-		statusBar.text(bookmarks.booklight.length + " folders found");
+		resultBar.text(bookmarks.booklight.length + " folders found");
 		bookmarks.booklight.forEach(function(bookmark){
 			var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
 			if (!bookmark.folder) elem.addClass('isFolder');
@@ -102,7 +104,27 @@ function close() {
 }
 
 function updateCounter() {
-	statusBar.text(bookmarksList.find('li:visible').length + " matching results");
+	resultBar.text(bookmarksList.find('li:visible').length + " matching results");
+}
+
+function updateStatus(element){
+	// Check if the root parent for the current node is not the bookmarks bar or other bookmarks
+	var parentsList  = getStatus(element, []);
+	var statusText   = '';
+
+	statusBar.text(parentsList.reverse().join(' > '));
+
+}
+
+function getStatus(element, parentsArray) {
+
+	var parentID  = element.attr('data-parent');
+
+	if (!parentID) return parentsArray;
+	if (parentID == "1" && parentID == "2") return parentsArray;
+
+	parentsArray.push(element.text());
+	return getStatus($('#' + parentID), parentsArray);
 }
 
 function goFolderBack() {
@@ -151,6 +173,7 @@ function focusItem(index, subFolder, isMouse) {
 	if (!isMouse) element[0].scrollIntoView(false);
 	// Make the placeholder as the first element
 	searchBar.attr('placeholder', placeholderText);
+	updateStatus(element);
 }
 
 // replace a string at a certain range with another string
