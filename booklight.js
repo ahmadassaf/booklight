@@ -135,7 +135,7 @@ function goFolderBack() {
 	elementStack.pop().show();
 	higlightFirstElement();
 	updateCounter();
-
+	searchBar.val('');
 	searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
 }
 
@@ -152,6 +152,7 @@ function expandFolder(element) {
 	higlightFirstElement(true);
 	// update the match text counter
 	updateCounter();
+	searchBar.val('');
 }
 
 function focusItem(index, subFolder, isMouse) {
