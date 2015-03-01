@@ -2,9 +2,9 @@ Booklight
 ==========
 
 I got fed up wasting my time trying to navigate my way through bunch of bookmarks folder to arrange them. So if you are:
-    - Obssessed with organization
-    - Have a couple hunders (or thousands) of folders in your bookmarks
-    - You like to keep things tidy and every page has to be in its "perfect" place
+- Obssessed with organization
+- Have a couple hunders (or thousands) of folders in your bookmarks
+- You like to keep things tidy and every page has to be in its "perfect" place
 
 then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark.
 
