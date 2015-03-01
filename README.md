@@ -6,7 +6,9 @@ I got fed up wasting my time trying to navigate my way through bunch of bookmark
 - Have a couple hundreds (or thousands) of folders in your bookmarks
 - You like to keep things tidy and every page has to be in its "perfect" place
 
-then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark.
+then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark. 
+
+To Launch press (ctrl/Control + b) and thats it !
 
 [![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=8AB1kE6U-2g)
 
