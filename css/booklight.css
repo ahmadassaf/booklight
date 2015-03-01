@@ -16,5 +16,6 @@
 .booklight_list>li.activeFolder {background: #2ecc71; color: #fff;}
 .isFolder::before {font-family: 'fontello-booklight';content: '\e800';font-size: 8px;margin: 0 4px 0 0;position: relative;top: -2px;}
 span.booklight_resultsbar::before {font-family: 'fontello-booklight';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}
-span.isBooklit {display: none;position: absolute;font-size: 20px;color: #f1c40f;top: 20px;right: 10px;}
+span.isBooklit {font-family: 'fontello-booklight';display: none;position: absolute;font-size: 20px;color: #f1c40f;top: 20px;right: 10px;}
+span.isBooklit::before{font-family: 'fontello-booklight'; content: '\e803';}
 .booklight_statusbar{position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;border-bottom: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}
