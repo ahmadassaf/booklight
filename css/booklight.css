@@ -13,7 +13,7 @@
 .booklight_list {position: relative;overflow-y: scroll;height: 215px;list-style: none;width: 96%;padding: 0 5px 0 0;color: #777; line-height: 1.5em;margin: 0 auto;font-size: 13px}
 .booklight_list>li{margin: 0; padding: 0 5px; cursor:pointer;}
 .booklight_list>li.isFolder {color:#3498db;}
-.booklight_resultsbar {position: absolute;font-size: 9px;top: 50px;right: 10px;color: #ddd;}
+.booklight_resultsbar {position: absolute;font-size: 9px;top: 55px;right: 10px;color: #ddd;}
 .booklight_list>li.activeFolder {background: #2ecc71; color: #fff;}
 .isFolder::before {font-family: 'fontello-booklight';content: '\e800';font-size: 8px;margin: 0 4px 0 0;position: relative;top: -2px;}
 span.booklight_resultsbar::before {font-family: 'fontello-booklight';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}

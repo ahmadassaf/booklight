@@ -106,6 +106,8 @@ function higlightFirstElement(text) {
 function close() {
 	booklight_box.hide();
 	$('.booklight_list li').show();
+	searchBar.val('');
+	searchBar.attr('placeholder', '');
 }
 
 function updateCounter() {
