@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'fontello';
+  font-family: 'fontello-booklight';
   src: url('chrome-extension://__MSG_@@extension_id__/font/fontello.eot?76547315');
   src: url('chrome-extension://__MSG_@@extension_id__/font/fontello.eot?76547315#iefix') format('embedded-opentype'),
        url('chrome-extension://__MSG_@@extension_id__/font/fontello.woff?76547315') format('woff'),
@@ -20,7 +20,7 @@
 */
 
  [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "fontello";
+  font-family: "fontello-booklight";
   font-style: normal;
   font-weight: normal;
   speak: none;

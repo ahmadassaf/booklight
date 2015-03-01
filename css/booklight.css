@@ -1,13 +1,20 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/opensans/v10/cJZKeOuBrn4kERxqtaUH3ZBw1xU1rKptJj_0jans920.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
 
-.booklight {font-family:'Open Sans', sans-serif; min-width: 700px;position:absolute;width: 40%;height: 300px;left: 0;margin: 0 auto;right: 0;top: 10%;border: 2px solid #ddd;background: #fff;box-shadow: 0px 0px 20px 9px #ddd;display: none;z-index: 99999999}
-.booklight>input {width: 90%; margin: 10px auto; height:50px;bottom: 0;top: 0;position: absolute;border: 0;outline: none;padding: 5px 10px;font-size: 20px;}
-.booklight_list {position: absolute;top: 70px;overflow: scroll;height: 215px;list-style: none;padding: 0 10px;width: 96%;color: #777; line-height: 1.5em;}
+.booklight * {font-family:'Open Sans', sans-serif}
+.booklight { min-width: 700px;position:absolute;width: 40%;height: 300px;left: 0;margin: 0 auto;right: 0;top: 10%;border: 2px solid #ddd;background: #fff;box-shadow: 0px 0px 20px 9px #ddd;display: none;z-index: 99999999}
+.booklight>input {width: 90%; margin: 10px auto; height:50px;position: relative;border: 0;outline: none;padding: 5px 10px;font-size: 20px;box-sizing: content-box;}
+.booklight_list {position: relative;overflow-y: scroll;height: 215px;list-style: none;width: 96%;padding: 0 5px 0 0;color: #777; line-height: 1.5em;margin: 0 auto;font-size: 13px}
 .booklight_list>li{margin: 0; padding: 0 5px; cursor:pointer;}
 .booklight_list>li.isFolder {color:#3498db;}
 .booklight_resultsbar {position: absolute;font-size: 9px;top: 50px;right: 10px;color: #ddd;}
 .booklight_list>li.activeFolder {background: #2ecc71; color: #fff;}
-.isFolder::before {font-family: 'Fontello';content: '\e800';font-size: 8px;margin: 0 4px 0 0;position: relative;top: -2px;}
-span.booklight_status::before {font-family: 'Fontello';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}
+.isFolder::before {font-family: 'fontello-booklight';content: '\e800';font-size: 8px;margin: 0 4px 0 0;position: relative;top: -2px;}
+span.booklight_resultsbar::before {font-family: 'fontello-booklight';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}
 span.isBooklit {display: none;position: absolute;font-size: 20px;color: #f1c40f;top: 20px;right: 10px;}
-.booklight_statusbar{position: absolute;bottom: -25px;background: #2c3e50;width: 100%;border-top: 1px solid #fff;border-bottom: 1px solid #fff;font-size: 10px;color: #fff;padding: 0 10px;}
+.booklight_statusbar{position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;border-bottom: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}

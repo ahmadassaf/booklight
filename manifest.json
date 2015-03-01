@@ -51,6 +51,8 @@
     "bookmarks",
     "tabs",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "http://fonts.gstatic.com/",
+    "https://fonts.gstatic.com/"
   ]
 }

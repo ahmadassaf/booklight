@@ -22,7 +22,7 @@ function init() {
 
 	// Append the search lightbox to the body DOM element
 	$('body').append('<div class="booklight">'+
-		'<input id="ahmad" placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
+		'<input placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
 		'<span class="isBooklit icon-star"></span>'+
 		'<span class="booklight_resultsbar"></span>' +
 		'<ul class="booklight_list"></ul>'+
