@@ -52,8 +52,13 @@ function start() {
 	searchBar.on('input',function() {
 
 		var filter = $(this).val();
+
 		bookmarksList.find('li').hide();
-		bookmarksList.find('li:contains(' + filter +')').show();
+
+		// Check if you are inside a folder, filter only on that folders children
+		if (elementStack.length) {
+			bookmarksList.find('li[data-parent="'+ elementStack[elementStack.length - 1].id +'"]:contains(' + filter +')').show();
+		} else bookmarksList.find('li:contains(' + filter +')').show();
 
 		updateCounter();
 		higlightFirstElement();
@@ -132,7 +137,8 @@ function goFolderBack() {
 	var placeholderText = searchBar.attr('placeholder');
 
 	$('.booklight_list li').hide();
-	elementStack.pop().show();
+	elementStack.pop().elements.show();
+	if (!elementStack.length) $('.booklight_list li').show();
 	higlightFirstElement();
 	updateCounter();
 	searchBar.val('');
@@ -143,7 +149,7 @@ function expandFolder(element) {
 
 	var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
 	// save the current view in the elements stack
-	elementStack.push($('.booklight_list li:visible'));
+	elementStack.push({"id" : element.attr('id'), "elements" : $('.booklight_list li:visible')});
 	// hide the current list of elements
 	$('.booklight_list li').hide();
 	// Only display the subset which is the children
