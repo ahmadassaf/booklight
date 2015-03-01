@@ -6,9 +6,9 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
 
-.booklight * {font-family:'Open Sans', sans-serif; font-weight: 200}
-.booklight { min-width: 700px;position:absolute;width: 40%;height: 300px;left: 0;margin: 0 auto;right: 0;top: 10%;border: 2px solid #ddd;background: #fff;box-shadow: 0px 0px 20px 9px #ddd;display: none;z-index: 99999999}
-.booklight>input[type="text"] {box-shadow: none;width: 90%; margin: 10px auto; height:50px;position: relative;border: 0;outline: none;padding: 5px 10px;font-size: 20px;box-sizing: content-box;}
+.booklight * {font-family:'Open Sans', sans-serif; font-weight: 200;direction: ltr}
+.booklight { min-width: 700px;position:absolute;width: 40%;height: 320px;left: 0;margin: 0 auto;right: 0;top: 10%;background: #fff;box-shadow: 0px 0px 20px 9px #ddd;display: none;z-index: 99999999}
+.booklight>input[type="text"] {box-shadow: none;width: 90%; margin: 10px auto; height:50px;position: relative;border: 0;outline: none;padding: 5px 10px;font-size: 20px;box-sizing: content-box;float:left;}
 .booklight>input[type="text"]:focus{border:none;box-shadow: none}
 .booklight_list {position: relative;overflow-y: scroll;height: 215px;list-style: none;width: 96%;padding: 0 5px 0 0;color: #777; line-height: 1.5em;margin: 0 auto;font-size: 13px}
 .booklight_list>li{margin: 0; padding: 0 5px; cursor:pointer;}
@@ -19,4 +19,4 @@
 span.booklight_resultsbar::before {font-family: 'fontello-booklight';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}
 span.isBooklit {font-family: 'fontello-booklight';display: none;position: absolute;font-size: 20px;color: #f1c40f;top: 20px;right: 10px;}
 span.isBooklit::before{font-family: 'fontello-booklight'; content: '\e803';}
-.booklight_statusbar{position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;border-bottom: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}
+.booklight_statusbar{position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}
