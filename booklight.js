@@ -99,7 +99,7 @@ var booklight = function booklight() {
 				// Check if we are inside a subfolder. If so we want to present the folders hierarchy
 				if (subFolder) {
 					placeholderText = searchText + ' > ' + element.text();
-				} else if (searchText.indexOf('>') !== -1) {
+				} else if (!booklight.UI.isRoot()) {
 					var chunkedPlaceHolder = searchText.split('>');
 					placeholderText = booklight.searchBar.attr('placeholder').replace(chunkedPlaceHolder[chunkedPlaceHolder.length - 1], ' ' + element.text());
 				}
@@ -154,6 +154,9 @@ var booklight = function booklight() {
 				booklight.UI.updateCounter();
 				booklight.searchBar.val('');
 				id && booklight.elementStack.length ? booklight.UI.focusItem(id) : booklight.UI.higlightFirstElement(isFolder);
+		}, isRoot: function(){
+			 if (booklight.searchBar.attr('placeholder').indexOf('>') === -1) return true;
+			 	else return false;
 		}
 	}
 
@@ -204,17 +207,21 @@ var booklight = function booklight() {
 				booklight.UI.activateFolder(false, currentView.index );
 
 		},goForward : function(element) {
+				/*
+				 * Now, we want to cache the children so that we can revert back to the same view
+				 * $('.booklight_list li:visible') this selector will only show the current visible ones
+				 * which may have been filtered by a filter query
+				 * What we want is actually to show back all the children in that folder before any filtering
+				 */
 
 				var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
-				// save the current view in the elements stack
-				booklight.elementStack.push({"id" : element.attr('id') , "index" : element.index(), "elements" : $('.booklight_list li:visible')});
+				booklight.elementStack.push({"id" : element.attr('id') , "index" : element.index(), elements: $('.booklight_list li:visible')});
 				// hide the current list of elements
 				$('.booklight_list li').hide();
 				// Only display the subset which is the children
 				children.show();
 				// Apply folder activation
 				booklight.UI.activateFolder(true);
-
 		}
 	}
 
