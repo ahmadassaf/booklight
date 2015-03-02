@@ -198,9 +198,8 @@ var booklight = function booklight() {
 				$('.booklight_list li').hide();
 				// Fetch the elements from the stach and show those
 				var currentView = booklight.elementStack.pop();
-				currentView.elements.show();
 				// If the stack is empty, this means we are back in the root -> show all the folders then
-				if (!booklight.elementStack.length) $('.booklight_list li').show();
+				booklight.elementStack.length ? $('.booklight_list li[data-parent="'+ booklight.elementStack[booklight.elementStack.length -1].id +'"]').show():$('.booklight_list li').show();
 				// Change the placeholder text according to the current path (chop one from the end)
 				booklight.searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
 				// Apply folder activation
@@ -214,12 +213,11 @@ var booklight = function booklight() {
 				 * What we want is actually to show back all the children in that folder before any filtering
 				 */
 
-				var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
-				booklight.elementStack.push({"id" : element.attr('id') , "index" : element.index(), elements: $('.booklight_list li:visible')});
+				booklight.elementStack.push({"id" : element.attr('id') , "index" : element.index()});
 				// hide the current list of elements
 				$('.booklight_list li').hide();
 				// Only display the subset which is the children
-				children.show();
+				$('.booklight_list li[data-parent="'+ element.attr('id') +'"]').show();
 				// Apply folder activation
 				booklight.UI.activateFolder(true);
 		}
