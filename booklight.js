@@ -207,7 +207,7 @@ var booklight = function booklight() {
 
 				var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
 				// save the current view in the elements stack
-				booklight.elementStack.push({"query" : booklight.searchBar.val() , "index" : element.index(), "elements" : $('.booklight_list li:visible')});
+				booklight.elementStack.push({"id" : element.attr('id') , "index" : element.index(), "elements" : $('.booklight_list li:visible')});
 				// hide the current list of elements
 				$('.booklight_list li').hide();
 				// Only display the subset which is the children
