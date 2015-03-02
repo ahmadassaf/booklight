@@ -1,206 +1,252 @@
-init();
+var booklight = function booklight() {
 
-var booklight_box = $('.booklight');
-var searchBar     = $('.booklight>input');
-var bookmarksList = $('.booklight_list');
-var resultBar     = $('.booklight_resultsbar');
-var statusBar     = $('.booklight_statusbar');
+	var booklight = this;
+	// The array (stack) that will hold the navigation of the main elements and their subfolders
+	this.elementStack  = [];
 
-// The stack that will hold the navigation of the main elements and their subfolders
-var elementStack  = [];
+	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
-// multiple shortcuts that do the same thing
-key('control+b, ctrl+b', function(){ start(); });
-key('esc, escape', function(){ close(); });
-key('enter', 'input', function(){ addBookmark(window.location.href, document.title, $('.booklight_list li.activeFolder').attr('id')) });
-key('up', 'input', function(){ moveInList("UP") });
-key('down', 'input', function(){ moveInList("DOWN") });
-key('right', 'input', function(){ moveInList("RIGHT") });
-key('left', 'input', function(){ moveInList("LEFT") });
-key('control+x, ctrl+x', function(){ window.location.href = window.location.href.split('?')[0]; });
+		key('control+b, ctrl+b', function(){ booklight.UI.show(); });
+		key('esc, escape', function(){ booklight.UI.close(); });
+		key('enter', 'input', function(){ booklight.manager.addBookmark(); });
+		key('up', 'input', function(){ booklight.navigator.moveInList("UP") });
+		key('down', 'input', function(){ booklight.navigator.moveInList("DOWN") });
+		key('right', 'input', function(){ booklight.navigator.moveInList("RIGHT") });
+		key('left', 'input', function(){ booklight.navigator.moveInList("LEFT") });
+		key('control+x, ctrl+x', function(){ booklight.util.cleanURL(); });
 
-function init() {
+	}
 
-	// Append the search lightbox to the body DOM element
-	$('body').append('<div class="booklight">'+
-		'<input placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
-		'<span class="isBooklit"></span>'+
-		'<span class="booklight_resultsbar"></span>' +
-		'<ul class="booklight_list"></ul>'+
-		'<div class="booklight_statusbar"></div></div>');
+	this.attachMouseEvents = function attachMouseEvents() {
 
-	// Get the bookmarks from the local storage
-	chrome.storage.local.get("booklight", function(bookmarks) {
-		resultBar.text(bookmarks.booklight.length + " folders found");
-		bookmarks.booklight.forEach(function(bookmark){
-			var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
-			if (!bookmark.folder) elem.addClass('isFolder');
-			bookmarksList.append(elem);
-		});
-	});
+		// TO DO: Attach the events on the mouse clicks
 
-	// attach the events on the mouse clicks
-	// $('body').on('click','.booklight_list li', function(){ focusItem($(this).index(), null, true)
-	// }).on('dblclick', function(){ if ($(this).hasClass('isFolder')) expandFolder($(this)) });
+		// $('body').on('click','.booklight_list li', function(){ focusItem($(this).index(), null, true)
+		// }).on('dblclick', function(){ if ($(this).hasClass('isFolder')) goForward($(this)) });
+	}
 
-}
+	this.UI = {
 
-function start() {
-	booklight_box.show();
-	searchBar.val('').focus();
-	higlightFirstElement();
+		build : function build() {
 
-	searchBar.on('input',function() {
+			// Append the search lightbox to the body DOM element
+			$('body').append('<div class="booklight">'+
+				'<input placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
+				'<span class="isBooklit"></span>'+
+				'<span class="booklight_resultsbar"></span>' +
+				'<ul class="booklight_list"></ul>'+
+				'<div class="booklight_statusbar"></div></div>');
 
-		var filter = $(this).val();
+			// Define the CSS selectors for the UI elements and cache them
+			booklight.booklightBox  = $('.booklight');
+			booklight.searchBar     = $('.booklight>input');
+			booklight.bookmarksList = $('.booklight_list');
+			booklight.resultBar     = $('.booklight_resultsbar');
+			booklight.statusBar     = $('.booklight_statusbar');
 
-		bookmarksList.find('li').hide();
+			// Get the bookmarks from the local storage
+			chrome.storage.local.get("booklight", function(bookmarks) {
+				booklight.resultBar.text(bookmarks.booklight.length + " folders found");
+				bookmarks.booklight.forEach(function(bookmark){
+					var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
+					if (!bookmark.folder) elem.addClass('isFolder');
+						booklight.bookmarksList.append(elem);
+				});
+			});
 
-		// Check if you are inside a folder, filter only on that folders children
-		if (elementStack.length) {
-			bookmarksList.find('li[data-parent="'+ elementStack[elementStack.length - 1].id +'"]:contains(' + filter +')').show();
-		} else bookmarksList.find('li:contains(' + filter +')').show();
+			// Attach the filtering functions for the inputbox
+			booklight.searchBar.on('input', function() {
 
-		updateCounter();
-		higlightFirstElement();
-	});
-}
+				var filter = $(this).val();
 
-function addBookmark(url, title, folder) {
-	chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
-  	if (response.message == "success"){
-  		$('span.isBooklit').show();
-  	}
-	});
-}
+				// Hide all the folders list and only show those matching the input query
+				$('.booklight_list li').hide();
 
-function moveInList(direction) {
+				// Check if you are inside a folder, filter only on that folders children
+				if (booklight.elementStack.length) {
+					var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
+					booklight.bookmarksList.find('li[data-parent="' + nestedFolderID + '"]:contains(' + filter + ')').show();
+				} else booklight.bookmarksList.find('li:contains(' + filter + ')').show();
 
-	var element 					= $('.booklight_list li.activeFolder');
-	var index             = element.index();
-	var results           = bookmarksList.find('li:visible');
-	var resutsNumber      = results.length;
+				booklight.UI.updateCounter();
+				booklight.UI.higlightFirstElement();
+			});
 
-	var firstElementIndex = $('.booklight_list li:visible').first().index();
-	var lastElementIndex  = $('.booklight_list li:visible').last().index();
+		}, show : function show() {
 
-	switch (direction) {
-		case ('DOWN') : {
-			index !== lastElementIndex ? focusItem($('.booklight_list li:visible.activeFolder').nextAll('li:visible').first().index()) : focusItem(firstElementIndex);
-		} break;
-		case ('UP') : {
-			index !== firstElementIndex ? focusItem($('.booklight_list li:visible.activeFolder').prevAll('li:visible').first().index()) : focusItem(lastElementIndex);
-		} break;
-		case ('RIGHT') : {
-			if (element.hasClass('isFolder')) expandFolder(element);
-		} break;
-		case ('LEFT') : {
-			if (elementStack.length) goFolderBack();
-		} break;
+				// Show the booklight main UI window and all of its elements if they were hidden from a previous filter operation
+				booklight.booklightBox.show();
+				$('.booklight_list li').show();
+				// Empty the searchbar input box and make it focused for direct query entry
+				booklight.searchBar.val('').focus();
+				// Highlight the first element of the results
+				booklight.UI.higlightFirstElement();
+
+		},close : function close() {
+
+				booklight.booklightBox.hide();
+
+		},focusItem : function(index, subFolder, isMouse) {
+
+				$('li.activeFolder').removeClass('activeFolder');
+
+				// Get the element with the index passed in the parameters
+				var element         = $('.booklight_list li').eq(index);
+				// The folder name of the element detected, this will augmented with the current placeholder text
+				var placeholderText = element.text();
+				var searchText      = booklight.searchBar.attr('placeholder');
+
+				// Check if we are inside a subfolder. If so we want to present the folders hierarchy
+				if (subFolder) {
+					placeholderText = searchText + ' > ' + element.text();
+				} else if (searchText.indexOf('>') !== -1) {
+					var chunkedPlaceHolder = searchText.split('>');
+					placeholderText = booklight.searchBar.attr('placeholder').replace(chunkedPlaceHolder[chunkedPlaceHolder.length - 1], ' ' + element.text());
+				}
+
+				// Highlight the first result element
+				element.addClass('activeFolder');
+				/* Check if the focus item is from a mouse click
+				 * If not and you are navigating by keyboard then we pull the element into the current scroll view
+				 * If th event is triggered by mouse, it is not natural to scroll the element into view on click
+				 */
+				if (!isMouse) element[0].scrollIntoView(false);
+				// Change the searchbar placeholder text with the appropriate text
+				booklight.searchBar.attr('placeholder', placeholderText);
+				// Update the status bar with the full folder path
+				booklight.UI.updateStatus(element);
+
+		},higlightFirstElement: function(text) {
+
+				booklight.UI.focusItem($('.booklight_list li:visible').first().index(), text);
+
+		},updateCounter: function() {
+
+				booklight.resultBar.text(booklight.bookmarksList.find('li:visible').length + " matching results");
+
+		},updateStatus: function(element){
+
+				// Check if the root parent for the current node is not the bookmarks bar or other bookmarks
+				var parentsList  = getStatus(element, []);
+
+				booklight.statusBar.text(parentsList.reverse().join(' > '));
+
+				// This function will recursively fetch the parent hierarchy for a current folder
+				function getStatus (element, parentsArray) {
+
+					var parentID  = element.attr('data-parent');
+
+					if (!parentID) return parentsArray;
+					if (parentID == "1" && parentID == "2") return parentsArray;
+
+					parentsArray.push(element.text());
+					return getStatus($('#' + parentID), parentsArray);
+				}
+		},activateFolder: function(isFolder) {
+
+				/*
+				 * These are the set of functions you need to do when you are into a new folder view
+				 * higlightFirstElement: highlight the first element in the results
+				 * updateCounter: update the filtering counter (showing the current number of folders)
+				 * searchBar.val(''): reset the input text so that you can filter on the current folder
+				 */
+
+				booklight.UI.higlightFirstElement(isFolder);
+				booklight.UI.updateCounter();
+				booklight.searchBar.val('');
+		}
+	}
+
+	this.navigator = {
+
+		moveInList: function(direction) {
+
+			var element 					= $('.booklight_list li.activeFolder');
+			var index             = element.index();
+			var results           = booklight.bookmarksList.find('li:visible');
+			var firstElementIndex = $('.booklight_list li:visible').first().index();
+			var lastElementIndex  = $('.booklight_list li:visible').last().index();
+
+			/* Handle the keyboard actions
+			 * Circular movement up and down the list (when reaching top, go down and vice-versa)
+			 * Moving through the folders hierarchy (right go down the list and up to go back)
+			 */
+			switch (direction) {
+				case ('DOWN') : {
+					index !== lastElementIndex ? booklight.UI.focusItem($('.booklight_list li:visible.activeFolder').nextAll('li:visible').first().index()) : booklight.UI.focusItem(firstElementIndex);
+				} break;
+				case ('UP') : {
+					index !== firstElementIndex ? booklight.UI.focusItem($('.booklight_list li:visible.activeFolder').prevAll('li:visible').first().index()) : booklight.UI.focusItem(lastElementIndex);
+				} break;
+				case ('RIGHT') : {
+					if (element.hasClass('isFolder')) booklight.navigator.goForward(element);
+				} break;
+				case ('LEFT') : {
+					if (booklight.elementStack.length) booklight.navigator.goBack();
+				} break;
+			}
+
+		},goBack: function() {
+
+				// Catch the current placeholder text
+				var placeholderText = booklight.searchBar.attr('placeholder');
+
+				// Hide all the elements and only show those from the previous steps [cahced in the stack]
+				$('.booklight_list li').hide();
+				// Fetch the elements from the stach and show those
+				booklight.elementStack.pop().elements.show();
+				// If the stack is empty, this means we are back in the root -> show all the folders then
+				if (!booklight.elementStack.length) $('.booklight_list li').show();
+				// Change the placeholder text according to the current path (chop one from the end)
+				booklight.searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
+				// Apply folder activation
+				booklight.UI.activateFolder();
+
+		},goForward : function(element) {
+
+				var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
+				// save the current view in the elements stack
+				booklight.elementStack.push({"id" : element.attr('id'), "elements" : $('.booklight_list li:visible')});
+				// hide the current list of elements
+				$('.booklight_list li').hide();
+				// Only display the subset which is the children
+				children.show();
+				// Apply folder activation
+				booklight.UI.activateFolder(true);
+
+		}
+	}
+
+	this.manager = {
+
+		addBookmark: function(url, title, folder) {
+
+			// Extract the parameters needed to add a bookmark in the Chrome API
+			var url    = window.location.href;
+			var title  = document.title;
+			var folder = $('.booklight_list li.activeFolder').attr('id');
+
+			chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
+				if (response.message == "success"){
+					$('span.isBooklit').show();
+				}
+			});
+		}
+	}
+
+	this.util = {
+		cleanURL: function() {
+			window.location.href = window.location.href.split('?')[0];
+		}
 	}
 }
 
-function higlightFirstElement(text) {
-	focusItem($('.booklight_list li:visible').first().index(), text);
-}
+/*
+ * Booklight is a smarter way of add bookmakrs by allowing a spotlight like search and filtering on your bookmarks
+ * Attach keyboard events and mouse events if you wish, and then build the UI and thats it !
+ */
 
-function close() {
-	booklight_box.hide();
-	$('.booklight_list li').show();
-	searchBar.val('');
-	searchBar.attr('placeholder', '');
-}
+var booklight = new booklight();
 
-function updateCounter() {
-	resultBar.text(bookmarksList.find('li:visible').length + " matching results");
-}
-
-function updateStatus(element){
-	// Check if the root parent for the current node is not the bookmarks bar or other bookmarks
-	var parentsList  = getStatus(element, []);
-	var statusText   = '';
-
-	statusBar.text(parentsList.reverse().join(' > '));
-
-}
-
-function getStatus(element, parentsArray) {
-
-	var parentID  = element.attr('data-parent');
-
-	if (!parentID) return parentsArray;
-	if (parentID == "1" && parentID == "2") return parentsArray;
-
-	parentsArray.push(element.text());
-	return getStatus($('#' + parentID), parentsArray);
-}
-
-function goFolderBack() {
-
-	var placeholderText = searchBar.attr('placeholder');
-
-	$('.booklight_list li').hide();
-	elementStack.pop().elements.show();
-	if (!elementStack.length) $('.booklight_list li').show();
-	higlightFirstElement();
-	updateCounter();
-	searchBar.val('');
-	searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
-}
-
-function expandFolder(element) {
-
-	var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
-	// save the current view in the elements stack
-	elementStack.push({"id" : element.attr('id'), "elements" : $('.booklight_list li:visible')});
-	// hide the current list of elements
-	$('.booklight_list li').hide();
-	// Only display the subset which is the children
-	children.show();
-	// highlight the first element of the results
-	higlightFirstElement(true);
-	// update the match text counter
-	updateCounter();
-	searchBar.val('');
-}
-
-function focusItem(index, subFolder, isMouse) {
-
-	$('li.activeFolder').removeClass('activeFolder');
-
-	var element         = $('.booklight_list li').eq(index);
-	var placeholderText = element.text();
-
-	if (subFolder){
-		placeholderText = searchBar.attr('placeholder') + ' > ' + element.text();
-	} else if (searchBar.attr('placeholder').indexOf('>') !== -1) {
-		var chunkedPlaceHolder = searchBar.attr('placeholder').split('>');
-		placeholderText = searchBar.attr('placeholder').replace(chunkedPlaceHolder[chunkedPlaceHolder.length - 1], ' ' + element.text());
-	}
-
-	// Highlight the first result element
-	element.addClass('activeFolder');
-	if (!isMouse) element[0].scrollIntoView(false);
-	// Make the placeholder as the first element
-	searchBar.attr('placeholder', placeholderText);
-	updateStatus(element);
-}
-
-// replace a string at a certain range with another string
-function replaceRange(s, start, end, substitute) {
-    return s.substring(0, start) + substitute + s.substring(end);
-}
-
-// Overriding the filter function to make it work on the input boxes
-key.filter = function(event){
-	var tagName = (event.target || event.srcElement).tagName;
-	key.setScope(/^(INPUT)$/.test(tagName) ? 'input' : 'other');
-	return true;
-}
-
-// Overriding the default jQuery contains to make it case insensitive
-$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-    return function( elem ) {
-        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-    };
-});
+booklight.attachKeyboardEvents();
+booklight.UI.build();
