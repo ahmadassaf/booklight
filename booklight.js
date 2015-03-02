@@ -142,18 +142,18 @@ var booklight = function booklight() {
 					parentsArray.push(element.text());
 					return getStatus($('#' + parentID), parentsArray);
 				}
-		},activateFolder: function(isFolder) {
+		},activateFolder: function(isFolder, id) {
 
 				/*
 				 * These are the set of functions you need to do when you are into a new folder view
-				 * higlightFirstElement: highlight the first element in the results
+				 * higlightFirstElement: highlight the first element in the results or the last element if you are not in the homescreen
 				 * updateCounter: update the filtering counter (showing the current number of folders)
 				 * searchBar.val(''): reset the input text so that you can filter on the current folder
 				 */
 
-				booklight.UI.higlightFirstElement(isFolder);
 				booklight.UI.updateCounter();
 				booklight.searchBar.val('');
+				id && booklight.elementStack.length ? booklight.UI.focusItem(id) : booklight.UI.higlightFirstElement(isFolder);
 		}
 	}
 
@@ -194,19 +194,20 @@ var booklight = function booklight() {
 				// Hide all the elements and only show those from the previous steps [cahced in the stack]
 				$('.booklight_list li').hide();
 				// Fetch the elements from the stach and show those
-				booklight.elementStack.pop().elements.show();
+				var currentView = booklight.elementStack.pop();
+				currentView.elements.show();
 				// If the stack is empty, this means we are back in the root -> show all the folders then
 				if (!booklight.elementStack.length) $('.booklight_list li').show();
 				// Change the placeholder text according to the current path (chop one from the end)
 				booklight.searchBar.attr('placeholder', replaceRange(placeholderText, placeholderText.lastIndexOf('>'), placeholderText.length, ''));
 				// Apply folder activation
-				booklight.UI.activateFolder();
+				booklight.UI.activateFolder(false, currentView.index );
 
 		},goForward : function(element) {
 
 				var children = $('.booklight_list li[data-parent="'+ element.attr('id') +'"]');
 				// save the current view in the elements stack
-				booklight.elementStack.push({"id" : element.attr('id'), "elements" : $('.booklight_list li:visible')});
+				booklight.elementStack.push({"query" : booklight.searchBar.val() , "index" : element.index(), "elements" : $('.booklight_list li:visible')});
 				// hide the current list of elements
 				$('.booklight_list li').hide();
 				// Only display the subset which is the children
