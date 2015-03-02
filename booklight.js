@@ -17,6 +17,7 @@ key('up', 'input', function(){ moveInList("UP") });
 key('down', 'input', function(){ moveInList("DOWN") });
 key('right', 'input', function(){ moveInList("RIGHT") });
 key('left', 'input', function(){ moveInList("LEFT") });
+key('control+x, ctrl+x', function(){ window.location.href = window.location.href.split('?')[0]; });
 
 function init() {
 

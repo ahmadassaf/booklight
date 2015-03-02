@@ -8,9 +8,9 @@
 
 .booklight * {font-family:'Open Sans', sans-serif; font-weight: 200;direction: ltr}
 .booklight { min-width: 700px;position:absolute;width: 40%;height: 320px;left: 0;margin: 0 auto;right: 0;top: 100px;background: #fff;box-shadow: 0px 0px 20px 9px #ddd;display: none;z-index: 99999999}
-.booklight>input[type="text"] {background:#fff; color:#000;box-shadow: none;width: 90%; margin: 10px auto; height:50px;position: relative;border: 0;outline: none;padding: 5px 10px;font-size: 20px;box-sizing: content-box;float:left;}
-.booklight>input[type="text"]::-webkit-input-placeholder {color: #BEB9B9;}
-.booklight>input[type="text"]:focus{border:none;box-shadow: none}
+.booklight input[type="text"] {background:#fff !important; color:#000;box-shadow: none;width: 90%; margin: 10px auto; height:50px;position: relative;border: 0;outline: none;padding: 5px 10px;font-size: 20px;box-sizing: content-box;float:left;}
+.booklight input[type="text"]::-webkit-input-placeholder {color: #BEB9B9;}
+.booklight input[type="text"]:focus{border:none;box-shadow: none}
 .booklight_list {position: relative;overflow-y: scroll;height: 215px;list-style: none;width: 96%;padding: 0 5px 0 0;color: #777; margin: 0 auto;}
 .booklight_list>li{margin: 0; padding: 0 5px; cursor:pointer;line-height: 1.5em;font-size: 13px; text-align: left}
 .booklight_list>li.isFolder {color:#3498db;}
@@ -20,4 +20,4 @@
 span.booklight_resultsbar::before {font-family: 'fontello-booklight';content: '\e802';position: relative;margin: 0 5px;color: #f1c40f;}
 span.isBooklit {font-family: 'fontello-booklight';display: none;position: absolute;font-size: 20px;color: #f1c40f;top: 20px;right: 10px;}
 span.isBooklit::before{font-family: 'fontello-booklight'; content: '\e803';}
-.booklight_statusbar{position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}
+.booklight_statusbar{text-align:left;position: relative;background: #2c3e50;width: 100%;border-top: 1px solid #fff;font-size: 10px;color: #fff;padding: 5px;box-sizing:border-box;line-height: 15px}
