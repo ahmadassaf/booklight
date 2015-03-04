@@ -25,6 +25,21 @@ var booklight = function booklight() {
 		// }).on('dblclick', function(){ if ($(this).hasClass('isFolder')) goForward($(this)) });
 	}
 
+	this.attachListeners = function attachListeners() {
+
+		var localStorageKeys = ["booklightFolders", "booklightUrls"];
+
+		chrome.storage.onChanged.addListener(function(changes, namespace) {
+			for (key in changes) {
+				var storageChange = changes[key];
+				if (localStorageKeys.indexOf(key) !== -1 ) {
+					console.log('Storage key "%s" in namespace "%s" changed. Old value was "%s", new value is "%s".', key, namespace, storageChange.oldValue, storageChange.newValue);
+					booklight.UI.fillBookmarks(true);
+				}
+			}
+		});
+	}
+
 	this.UI = {
 
 		build : function build() {
@@ -44,15 +59,7 @@ var booklight = function booklight() {
 			booklight.resultBar     = $('.booklight_resultsbar');
 			booklight.statusBar     = $('.booklight_statusbar');
 
-			// Get the bookmarks from the local storage
-			chrome.storage.local.get("booklight", function(bookmarks) {
-				booklight.resultBar.text(bookmarks.booklight.length + " folders found");
-				bookmarks.booklight.forEach(function(bookmark){
-					var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
-					if (!bookmark.folder) elem.addClass('isFolder');
-						booklight.bookmarksList.append(elem);
-				});
-			});
+			booklight.UI.fillBookmarks();
 
 			// Attach the filtering functions for the inputbox
 			booklight.searchBar.on('input', function() {
@@ -71,6 +78,20 @@ var booklight = function booklight() {
 				booklight.UI.updateCounter();
 				booklight.UI.higlightFirstElement();
 			});
+
+		}, fillBookmarks : function fillBookmarks(isRefresh) {
+
+				// Check if the action is a list refresh, then we need to empty the list
+				if (isRefresh) booklight.bookmarksList.empty();
+				// Get the bookmarks from the local storage
+				chrome.storage.local.get("booklightFolders", function(bookmarks) {
+					booklight.resultBar.text(bookmarks.booklightFolders.length + " folders found");
+					bookmarks.booklightFolders.forEach(function(bookmark){
+						var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
+						if (!bookmark.folder) elem.addClass('isFolder');
+							booklight.bookmarksList.append(elem);
+					});
+				});
 
 		}, show : function show() {
 
@@ -255,4 +276,6 @@ var booklight = function booklight() {
 var booklight = new booklight();
 
 booklight.attachKeyboardEvents();
+booklight.attachListeners();
+
 booklight.UI.build();

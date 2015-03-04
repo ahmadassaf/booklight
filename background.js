@@ -51,6 +51,7 @@ var booklight = function booklight() {
 			if (request.message == "booklight") {
 				console.log("adding: " + request.url + " title: " + request.title + " to folder id: " + request.folder);
 				chrome.bookmarks.create({ 'parentId': request.folder, 'title': request.title, 'url': request.url });
+				//booklight.getBookmarks();
 				sendrequest({message: "success"});
 			}
 		});
