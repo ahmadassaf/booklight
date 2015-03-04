@@ -24,7 +24,7 @@ To Launch press (ctrl/Control + b) and thats it !
 - Add better logic to the star icon (at the moment it only shows when the page is successfully bookmarked) but it will not update if remove the bookmark ... etc.
 - Add fuzzy search for filtering from input box
 - Smart folder suggestions
-- Remember last location when going back to main screen or removing filters
+- ~~Remember last location when going back to main screen or removing filters~~ **done**
 
 ## Life before Booklight
 ![before-booklight](http://g.recordit.co/uqYqp8o08e.gif)
