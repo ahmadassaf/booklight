@@ -1,5 +1,6 @@
 // Additional Helper classes and overriders
 // replace a string at a certain range with another string
+
 function replaceRange(s, start, end, substitute) {
 	return s.substring(0, start) + substitute + s.substring(end);
 }
