@@ -2,7 +2,8 @@ var booklight = function booklight() {
 
 	var booklight = this;
 	// The array (stack) that will hold the navigation of the main elements and their subfolders
-	this.elementStack  = [];
+	this.elementStack = [];
+	this.fuzzySearch;
 
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
@@ -50,6 +51,7 @@ var booklight = function booklight() {
 
 			// Get the bookmarks from the local storage
 			chrome.storage.local.get("booklight", function(bookmarks) {
+				booklight.fuzzySearch = new Fuse(bookmarks.booklight, { keys: ['title'], threshold: 0.4});
 				booklight.resultBar.text(bookmarks.booklight.length + " folders found");
 				bookmarks.booklight.forEach(function(bookmark){
 					var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
@@ -62,7 +64,6 @@ var booklight = function booklight() {
 			booklight.searchBar.on('input', function() {
 
 				var filter = $(this).val();
-
 				// Hide all the folders list and only show those matching the input query
 				$('.booklight_list li').hide();
 
@@ -70,7 +71,11 @@ var booklight = function booklight() {
 				if (booklight.elementStack.length) {
 					var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
 					booklight.bookmarksList.find('li[data-parent="' + nestedFolderID + '"]:contains(' + filter + ')').show();
-				} else booklight.bookmarksList.find('li:contains(' + filter + ')').show();
+					booklight.fuzzySearch.search(filter).forEach(function(folder){ if (folder.parent == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
+				} else {
+					if (!filter) $('.booklight_list li').show();
+					booklight.fuzzySearch.search(filter).forEach(function(folder){ booklight.bookmarksList.find('li#'+ folder.id).show() });
+				}
 
 				booklight.UI.updateCounter();
 				booklight.UI.higlightFirstElement();
