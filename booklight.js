@@ -236,11 +236,12 @@ var booklight = function booklight() {
 			var title  = document.title;
 			var folder = $('.booklight_list li.activeFolder').attr('id');
 
-			chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
-				if (response.message == "success"){
-					$('span.isBooklit').show();
-				}
-			});
+			if ($('.booklight').is(':visible'))
+				chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
+					if (response.message == "success"){
+						$('span.isBooklit').show();
+					}
+				});
 		}
 	}
 
