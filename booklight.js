@@ -6,14 +6,18 @@ var booklight = function booklight() {
 
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
-		key('control+b, ctrl+b', function(){ booklight.UI.show(); });
-		key('esc, escape', function(){ booklight.UI.close(); });
-		key('enter', 'input', function(){ booklight.manager.addBookmark(); });
-		key('up', 'input', function(){ booklight.navigator.moveInList("UP") });
-		key('down', 'input', function(){ booklight.navigator.moveInList("DOWN") });
-		key('right', 'input', function(){ booklight.navigator.moveInList("RIGHT") });
-		key('left', 'input', function(){ booklight.navigator.moveInList("LEFT") });
-		key('control+x, ctrl+x', function(){ booklight.util.cleanURL(); });
+		var globalListener    = new window.keypress.Listener();
+		var booklightListener = new window.keypress.Listener($('.booklight')[0]);
+
+		globalListener.simple_combo("ctrl b", function() { booklight.UI.show() });
+		globalListener.simple_combo("esc", function() { booklight.UI.close() });
+		globalListener.simple_combo('ctrl x', function(){ booklight.util.cleanURL() });
+
+		booklightListener.simple_combo('enter', function(){ booklight.manager.addBookmark() });
+		booklightListener.simple_combo('up', function(){ booklight.navigator.moveInList("UP") });
+		booklightListener.simple_combo('down', function(){ booklight.navigator.moveInList("DOWN") });
+		booklightListener.simple_combo('right', function(){ booklight.navigator.moveInList("RIGHT") });
+		booklightListener.simple_combo('left', function(){ booklight.navigator.moveInList("LEFT") });
 
 	}
 
