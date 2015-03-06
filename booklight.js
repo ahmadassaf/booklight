@@ -11,7 +11,7 @@ var booklight = function booklight() {
 
 		globalListener.simple_combo("ctrl b", function() { booklight.UI.show() });
 		globalListener.simple_combo("esc", function() { booklight.UI.close() });
-		globalListener.simple_combo('ctrl x', function(){ booklight.util.cleanURL() });
+		globalListener.simple_combo('ctrl alt x', function(){ booklight.util.cleanURL() });
 
 		booklightListener.simple_combo('enter', function(){ booklight.manager.addBookmark() });
 		booklightListener.simple_combo('up', function(){ booklight.navigator.moveInList("UP") });
