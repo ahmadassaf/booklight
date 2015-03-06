@@ -7,7 +7,7 @@ var booklight = function booklight() {
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
 		var globalListener    = new window.keypress.Listener();
-		var booklightListener = new window.keypress.Listener($('.booklight')[0]);
+		var booklightListener = new window.keypress.Listener($('#booklightManager')[0]);
 
 		globalListener.simple_combo("ctrl b", function() { booklight.UI.show() });
 		globalListener.simple_combo("esc", function() { booklight.UI.close() });
@@ -34,7 +34,7 @@ var booklight = function booklight() {
 		build : function build() {
 
 			// Append the search lightbox to the body DOM element
-			$('body').append('<div class="booklight">'+
+			$('body').append('<div id="booklightManager" class="booklight">'+
 				'<input placeholder="Filter..." type="text" data-list=".booklight_list" autocomplete="off"></input>' +
 				'<span class="isBooklit"></span>'+
 				'<span class="booklight_resultsbar"></span>' +
@@ -56,6 +56,7 @@ var booklight = function booklight() {
 					if (!bookmark.folder) elem.addClass('isFolder');
 						booklight.bookmarksList.append(elem);
 				});
+				booklight.attachKeyboardEvents();
 			});
 
 			// Attach the filtering functions for the inputbox
@@ -236,12 +237,11 @@ var booklight = function booklight() {
 			var title  = document.title;
 			var folder = $('.booklight_list li.activeFolder').attr('id');
 
-			if ($('.booklight').is(':visible'))
-				chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
-					if (response.message == "success"){
-						$('span.isBooklit').show();
-					}
-				});
+			chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
+				if (response.message == "success"){
+					$('span.isBooklit').show();
+				}
+			});
 		}
 	}
 
@@ -259,5 +259,4 @@ var booklight = function booklight() {
 
 var booklight = new booklight();
 
-booklight.attachKeyboardEvents();
 booklight.UI.build();
