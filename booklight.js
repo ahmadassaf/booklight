@@ -4,6 +4,8 @@ var booklight = function booklight() {
 	// The array (stack) that will hold the navigation of the main elements and their subfolders
 	this.elementStack  = [];
 	this.context       = 'folder';
+	this.fuzzyFolderSearch;
+	this.fuzzyURLsSearch;
 
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
@@ -68,11 +70,13 @@ var booklight = function booklight() {
 				// Check if you are inside a folder, filter only on that folders children
 				if (context = "folder" && booklight.elementStack.length) {
 					var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
-					booklight.bookmarksList.find('li[data-parent="' + nestedFolderID + '"]:contains(' + filter + ')').show();
-				} else {
-					filter = booklight.context === "url" ? filter.replace('|','') : filter;
-					console.log('li[data-type="' + booklight.context + '"]:contains(' + filter + ')');
-					booklight.bookmarksList.find('li[data-type="' + booklight.context + '"]:contains(' + filter + ')').show();
+					booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ if (folder.parent == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
+				} else if (!filter)
+						$('.booklight_list li[data-type="' + booklight.context + '"]').show();
+				  else {
+						var search = booklight.context === "url" ? booklight.fuzzyURLsSearch : booklight.fuzzyFolderSearch;
+						filter     = booklight.context === "url" ? filter.replace('|','') : filter;
+						search.search(filter).forEach(function(folder){ booklight.bookmarksList.find('li#'+ folder.id).show() });
 				}
 
 				booklight.UI.updateCounter();
@@ -83,24 +87,24 @@ var booklight = function booklight() {
 
 				// Get the bookmarks folders from the local storage
 				chrome.storage.local.get("booklightFolders", function(bookmarks) {
+					booklight.fuzzyFolderSearch = new Fuse(bookmarks.booklightFolders, { keys: ['title'], threshold: 0.4});
 					bookmarks.booklightFolders.forEach(function(bookmark){
 						var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent, 'data-type': 'folder'});
 						if (!bookmark.folder) elem.addClass('isFolder');
 							booklight.bookmarksList.append(elem);
 					});
-
-			});
+				});
 
 		},addURLs: function addURLs() {
 
 				// Get the bookmarks urls from the local storage
 				chrome.storage.local.get("booklightUrls", function(urls) {
+					booklight.fuzzyURLsSearch = new Fuse(urls.booklightUrls, { keys: ['title'], threshold: 0.4});
 					urls.booklightUrls.forEach(function(url){
 						var elem  = $('<li>', { text: url.title, id: url.id, 'data-url': url.url, 'data-parent': url.parentId, 'data-type': 'url'});
 						booklight.bookmarksList.append(elem);
 					});
-
-			});
+				});
 
 		},show : function show() {
 
