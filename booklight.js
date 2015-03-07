@@ -3,6 +3,7 @@ var booklight = function booklight() {
 	var booklight = this;
 	// The array (stack) that will hold the navigation of the main elements and their subfolders
 	this.elementStack  = [];
+	this.context       = 'folder';
 
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
@@ -48,40 +49,64 @@ var booklight = function booklight() {
 			booklight.resultBar     = $('.booklight_resultsbar');
 			booklight.statusBar     = $('.booklight_statusbar');
 
-			// Get the bookmarks from the local storage
-			chrome.storage.local.get("booklight", function(bookmarks) {
-				booklight.resultBar.text(bookmarks.booklight.length + " folders found");
-				bookmarks.booklight.forEach(function(bookmark){
-					var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent});
-					if (!bookmark.folder) elem.addClass('isFolder');
-						booklight.bookmarksList.append(elem);
-				});
-				booklight.attachKeyboardEvents();
-			});
+			booklight.UI.addFolders();
+			booklight.UI.addURLs();
+			booklight.attachKeyboardEvents();
 
 			// Attach the filtering functions for the inputbox
 			booklight.searchBar.on('input', function() {
 
 				var filter = $(this).val();
 
+				// Check if the user is switching into files or folders context
+				if (!filter) booklight.context = 'folder';
+				else if (filter == ' ') { $(this).val("|"); booklight.context = 'url' }
+
 				// Hide all the folders list and only show those matching the input query
 				$('.booklight_list li').hide();
 
 				// Check if you are inside a folder, filter only on that folders children
-				if (booklight.elementStack.length) {
+				if (context = "folder" && booklight.elementStack.length) {
 					var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
 					booklight.bookmarksList.find('li[data-parent="' + nestedFolderID + '"]:contains(' + filter + ')').show();
-				} else booklight.bookmarksList.find('li:contains(' + filter + ')').show();
+				} else {
+					filter = booklight.context === "url" ? filter.replace('|','') : filter;
+					console.log('li[data-type="' + booklight.context + '"]:contains(' + filter + ')');
+					booklight.bookmarksList.find('li[data-type="' + booklight.context + '"]:contains(' + filter + ')').show();
+				}
 
 				booklight.UI.updateCounter();
 				booklight.UI.higlightFirstElement();
 			});
 
-		}, show : function show() {
+		},addFolders: function addFolders() {
+
+				// Get the bookmarks folders from the local storage
+				chrome.storage.local.get("booklightFolders", function(bookmarks) {
+					bookmarks.booklightFolders.forEach(function(bookmark){
+						var elem = $('<li>', { text: bookmark.title, id: bookmark.id, 'data-dateGroupModified': bookmark.dateGroupModified, 'data-parent': bookmark.parent, 'data-type': 'folder'});
+						if (!bookmark.folder) elem.addClass('isFolder');
+							booklight.bookmarksList.append(elem);
+					});
+
+			});
+
+		},addURLs: function addURLs() {
+
+				// Get the bookmarks urls from the local storage
+				chrome.storage.local.get("booklightUrls", function(urls) {
+					urls.booklightUrls.forEach(function(url){
+						var elem  = $('<li>', { text: url.title, id: url.id, 'data-url': url.url, 'data-parent': url.parentId, 'data-type': 'url'});
+						booklight.bookmarksList.append(elem);
+					});
+
+			});
+
+		},show : function show() {
 
 				// Show the booklight main UI window and all of its elements if they were hidden from a previous filter operation
 				booklight.booklightBox.show();
-				$('.booklight_list li').show();
+				booklight.UI.showContext();
 				// Empty the searchbar input box and make it focused for direct query entry
 				booklight.searchBar.val('').focus();
 				// Highlight the first element of the results
@@ -90,6 +115,10 @@ var booklight = function booklight() {
 		},close : function close() {
 
 				booklight.booklightBox.hide();
+
+		},showContext: function showHideContext() {
+
+			$('.booklight_list li[data-type="' + booklight.context + '"]').show();
 
 		},focusItem : function(index, subFolder, isMouse) {
 
@@ -123,7 +152,7 @@ var booklight = function booklight() {
 
 		},higlightFirstElement: function(text) {
 
-				booklight.UI.focusItem($('.booklight_list li:visible').first().index(), text);
+				booklight.UI.focusItem($('.booklight_list li[data-type="' + booklight.context + '"]:visible').first().index(), text);
 
 		},updateCounter: function() {
 
