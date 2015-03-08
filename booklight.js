@@ -15,14 +15,15 @@ var booklight = function booklight() {
 
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
-		var globalListener    = new window.keypress.Listener();
-		var booklightListener = new window.keypress.Listener($('#booklightManager')[0]);
+		var globalListener    = new window.keypress.Listener($('body')[0],{is_solitary: true});
+		var booklightListener = new window.keypress.Listener($('#booklightManager')[0], {is_solitary: true});
 
 		globalListener.simple_combo("ctrl b", function() { booklight.UI.show() });
 		globalListener.simple_combo("esc", function() { booklight.UI.close() });
 		globalListener.simple_combo('ctrl alt x', function(){ booklight.util.cleanURL() });
 
 		booklightListener.simple_combo('enter', function(){ booklight.manager.addBookmark() });
+		booklightListener.simple_combo('ctrl enter', function(){ booklight.manager.openURL('_blank') });
 		booklightListener.simple_combo('up', function(){ booklight.navigator.moveInList("UP") });
 		booklightListener.simple_combo('down', function(){ booklight.navigator.moveInList("DOWN") });
 		booklightListener.simple_combo('right', function(){ booklight.navigator.moveInList("RIGHT") });
@@ -333,15 +334,24 @@ var booklight = function booklight() {
 		addBookmark: function(url, title, folder) {
 
 			// Extract the parameters needed to add a bookmark in the Chrome API
-			var url    = window.location.href;
-			var title  = document.title;
-			var folder = $('.booklight_list li.activeFolder').attr('id');
+			var element = $('.booklight_list li.activeFolder');
+			var url     = window.location.href;
+			var title   = document.title;
+			var folder  = element.attr('id');
+			var type    = element.attr('data-type');
 
-			chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
-				if (response.message == "success"){
-					$('span.isBooklit').show();
-				}
-			});
+			if (type !== "folder") {
+				booklight.manager.openURL("_self")
+			} else {
+				chrome.runtime.sendMessage({message: "booklight", url: url, folder: folder, title: title}, function(response) {
+					if (response.message == "success"){
+						$('span.isBooklit').show();
+					}
+				});
+			}
+
+		},openURL: function openURL(target) {
+				window.open($('.booklight_list li.activeFolder').attr('data-url'), target);
 		}
 	}
 
