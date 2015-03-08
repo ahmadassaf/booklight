@@ -77,20 +77,17 @@ var booklight = function booklight() {
 					$('.booklight_list li').hide();
 					// Check if you are inside a folder, filter only on that folders children
 					if (context = "folder" && booklight.elementStack.length) {
-
 						var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
-						booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ if (folder.parent == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
+						booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ if (folder.parentId == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
 
 					} else {
-
 						  var search = booklight.context === "url" ? booklight.fuzzyURLsSearch : booklight.fuzzyFolderSearch;
 							filter     = booklight.context === "url" ? filter.replace('|','') : filter;
 
 							// Check the context to apply appropriate fuzzy search
 							if (booklight.context === "url") {
 								// Create a new lazyloader instance for the urls
-								var searchResults = search.search(filter);
-								booklight.searchLazyLoader = new booklight.UI.lazyloader(searchResults);
+								booklight.searchLazyLoader = new booklight.UI.lazyloader(search.search(filter));
 								booklight.searchLazyLoader.load(true);
 							}
 							else
@@ -99,7 +96,7 @@ var booklight = function booklight() {
 				}
 
 				// Check if when we reach a starting case for folders or urls search
-				if (!filter || filter == '|') {
+				if ((!filter  && !booklight.elementStack.length) || filter == '|') {
 					booklight.context == "folder" ? booklight.UI.showSection(null, true, false, "url") : booklight.UI.showSection(booklight.urlsLazyloader.urlsDOM,false,true);
 				}
 
@@ -167,6 +164,7 @@ var booklight = function booklight() {
 				booklight.UI.showContext();
 				// Empty the searchbar input box and make it focused for direct query entry
 				booklight.searchBar.val('').focus();
+				booklight.searchBar.attr('placeholder', 'Filter...');
 				// Highlight the first element of the results
 				booklight.UI.higlightFirstElement();
 				booklight.UI.updateCounter();
