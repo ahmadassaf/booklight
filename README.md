@@ -10,6 +10,9 @@ then you came to the right place. **Booklight** is a clean Chrome Extension to e
 
 To Launch press (ctrl/Control + b) and thats it !
 
+## Watch Booklight Video
+[![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=8AB1kE6U-2g)
+
 ### Features
 
 - Filter bookmarks based on manual entry
@@ -20,14 +23,6 @@ To Launch press (ctrl/Control + b) and thats it !
 - The ability to switch to urls search **NEW**
 - Launching urls in current or new tab **NEW**
 - Fuzzy search enabled for filtering on both folders and urls **NEW**
-
-### Things i would like to do
-
-- Add mouse interactions
-- Add better logic to the star icon (at the moment it only shows when the page is successfully bookmarked) but it will not update if remove the bookmark ... etc.
-- ~~Add fuzzy search for filtering from input box~~
-- Smart folder suggestions
-- ~~Remember last location when going back to main screen or removing filters~~ **done**
 
 ![booklight](http://g.recordit.co/CP32P1AZwl.gif)
 
@@ -73,6 +68,12 @@ lazyloader: function lazyloader(elements){
 ```
 You can tweak the number of elements you want to show on every iteration and it works for both searching and filtering.
 
-## Watch Booklight Video
-[![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=8AB1kE6U-2g)
+### Things i would like to do
+
+- Add mouse interactions
+- Add better logic to the star icon (at the moment it only shows when the page is successfully bookmarked) but it will not update if remove the bookmark ... etc.
+- ~~Add fuzzy search for filtering from input box~~
+- Smart folder suggestions
+- ~~Remember last location when going back to main screen or removing filters~~ **done**
+- 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
