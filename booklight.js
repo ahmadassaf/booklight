@@ -134,7 +134,7 @@ var booklight = function booklight() {
 				var lazyloader = this;
 
 				this.elements  = elements;
-				this.showLimit = 5;
+				this.showLimit = 15;
 				this.urlsDOM   = '';
 
 				this.load = function(empty, hide) {
@@ -146,7 +146,9 @@ var booklight = function booklight() {
 
 					// the idea is build a kind of lazy loading for urls to minimize the building of the DOM elements
 					urlsToAdd.forEach(function(url){
-						urlsDOM += '<li id="' + url.id + '" data-url="' + url.url + '" data-parent="' + url.parentId + '" data-type="url">' + url.title + '</li>';
+						urlsDOM += '<li id="' + url.id + '" data-url="' + url.url + '" data-parent="' + url.parentId + '" data-type="url">' +
+						'<img src="http://www.google.com/s2/favicons?domain_url=' + url.url + '"</img>' +
+						url.title + '</li>';
 					});
 
 					lazyloader.urlsDOM += urlsDOM;
