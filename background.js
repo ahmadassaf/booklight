@@ -28,7 +28,7 @@ var booklight = function booklight() {
 			results = results || [];
 
 			nodeArray.forEach( function( node ) {
-				if (filterFn(node)) results.push({title: node.title, id: node.id, dateGroupModified: node.dateGroupModified, folder: isLeaf(node), parent: node.parentId});
+				if (filterFn(node)) results.push({title: node.title, id: node.id, dateGroupModified: node.dateGroupModified, folder: isLeaf(node), parentId: node.parentId});
 				if (node.children) filterRecursively(node.children, childrenProperty, filterFn, results);
 			});
 			return results;

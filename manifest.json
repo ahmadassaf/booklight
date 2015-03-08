@@ -30,8 +30,8 @@
       "css": ["css/booklight.css", "css/fontello.css"],
       "js": [
         "lib/jquery.js",
-        "lib/hideSeek.js",
-        "lib/keymaster.js",
+        "lib/fuse.js",
+        "lib/keyboard.js",
         "helper.js",
         "booklight.js"
         ],
