@@ -89,7 +89,8 @@ var booklight = function booklight() {
 							// Check the context to apply appropriate fuzzy search
 							if (booklight.context === "url") {
 								// Create a new lazyloader instance for the urls
-								booklight.searchLazyLoader = new booklight.UI.lazyloader(search.search(filter));
+								var searchResults = search.search(filter);
+								booklight.searchLazyLoader = new booklight.UI.lazyloader(searchResults);
 								booklight.searchLazyLoader.load(true);
 							}
 							else
@@ -99,7 +100,6 @@ var booklight = function booklight() {
 
 				// Check if when we reach a starting case for folders or urls search
 				if (!filter || filter == '|') {
-					console.log("empty with context: " + booklight.context);
 					booklight.context == "folder" ? booklight.UI.showSection(null, true, false, "url") : booklight.UI.showSection(booklight.urlsLazyloader.urlsDOM,false,true);
 				}
 
@@ -141,7 +141,7 @@ var booklight = function booklight() {
 				this.load = function(empty, hide) {
 
 					var urlsDOM             = '';
-					var currentAttachedUrls = $('.booklight_list li[data-type="url"]').length || 0;
+					var currentAttachedUrls = this.urlsDOM == '' ? 0 : $('.booklight_list li[data-type="url"]').length;
 					var limit               = this.elements.length > this.showLimit ? this.showLimit : this.elements.length;
 					var urlsToAdd           = this.elements.slice(currentAttachedUrls, currentAttachedUrls + limit);
 
