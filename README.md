@@ -25,7 +25,7 @@ To Launch press (ctrl/Control + b) and thats it
 - The ability to switch to urls search **NEW**
 - Launching urls in current or new tab **NEW**
 - Fuzzy search enabled for filtering on both folders and urls **NEW**
-- Clean current URL before bookmarking (sometimes the url is polluted with query strings e.g ?source= ... for various tracking information). To clean the url from those, hit `ctrl+alt+x` and this will solve this issue.
+- Clean current URL before bookmarking (sometimes the url is polluted with query strings e.g `?source= ...` for various tracking information). To clean the url from those, hit `ctrl+alt+x` and this will solve this issue.
 
 ![booklight](http://g.recordit.co/CP32P1AZwl.gif)
 
