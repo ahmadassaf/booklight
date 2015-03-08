@@ -16,14 +16,16 @@ var booklight = function booklight() {
 	this.attachKeyboardEvents = function attachKeyboardEvents() {
 
 		var globalListener    = new window.keypress.Listener($('body')[0],{is_solitary: true});
-		var booklightListener = new window.keypress.Listener($('#booklightManager')[0], {is_solitary: true});
+		var booklightListener = new window.keypress.Listener($('#booklightManager')[0]);
+		var executionListener = new window.keypress.Listener($('.booklight>input')[0], {is_solitary : true});
 
 		globalListener.simple_combo("ctrl b", function() { booklight.UI.show() });
 		globalListener.simple_combo("esc", function() { booklight.UI.close() });
 		globalListener.simple_combo('ctrl alt x', function(){ booklight.util.cleanURL() });
 
-		booklightListener.simple_combo('enter', function(){ booklight.manager.addBookmark() });
-		booklightListener.simple_combo('ctrl enter', function(){ booklight.manager.openURL('_blank') });
+		executionListener.simple_combo('enter', function(){ booklight.manager.addBookmark() });
+		executionListener.simple_combo('ctrl enter', function(){ booklight.manager.openURL('_blank') });
+
 		booklightListener.simple_combo('up', function(){ booklight.navigator.moveInList("UP") });
 		booklightListener.simple_combo('down', function(){ booklight.navigator.moveInList("DOWN") });
 		booklightListener.simple_combo('right', function(){ booklight.navigator.moveInList("RIGHT") });
@@ -72,32 +74,31 @@ var booklight = function booklight() {
 				// Check if the value entered is space which is the trigger for urls search
 				else if (filter == ' ') { $(this).val("|"); booklight.context = 'url'; booklight.urlsLazyloader.load(false, true); }
 
-				if (filter && filter !== ' ') {
-					// Hide all the folders list and only show those matching the input query
+				if (filter) {
+
+					// hide all the current elements
 					$('.booklight_list li').hide();
-					// Check if you are inside a folder, filter only on that folders children
-					if (context = "folder" && booklight.elementStack.length) {
-						var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
-						booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ if (folder.parentId == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
+
+					if (booklight.searchBar.val().indexOf('|') !== -1 ) {
+						var filter = filter.replace('|','');
+						if (filter.length > 1) {
+							// Now we will be filtering on urls only. Create a new lazyloader instance for the urls
+							booklight.searchLazyLoader = new booklight.UI.lazyloader(booklight.fuzzyURLsSearch.search(filter));
+							booklight.searchLazyLoader.load(true);
+						} else booklight.UI.showSection(booklight.urlsLazyloader.urlsDOM,false,true);
 
 					} else {
-						  var search = booklight.context === "url" ? booklight.fuzzyURLsSearch : booklight.fuzzyFolderSearch;
-							filter     = booklight.context === "url" ? filter.replace('|','') : filter;
-
-							// Check the context to apply appropriate fuzzy search
-							if (booklight.context === "url") {
-								// Create a new lazyloader instance for the urls
-								booklight.searchLazyLoader = new booklight.UI.lazyloader(search.search(filter));
-								booklight.searchLazyLoader.load(true);
-							}
-							else
-								search.search(filter).forEach(function(folder){ booklight.bookmarksList.find('li#'+ folder.id).show() });
+						if (context = "folder" && booklight.elementStack.length) {
+							var nestedFolderID = booklight.elementStack[booklight.elementStack.length - 1].id ;
+							booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ if (folder.parentId == nestedFolderID) booklight.bookmarksList.find('li#'+ folder.id).show() });
+						} else {
+							booklight.fuzzyFolderSearch.search(filter).forEach(function(folder){ booklight.bookmarksList.find('li#'+ folder.id).show() });
+						}
 					}
-				}
-
-				// Check if when we reach a starting case for folders or urls search
-				if ((!filter  && !booklight.elementStack.length) || filter == '|') {
-					booklight.context == "folder" ? booklight.UI.showSection(null, true, false, "url") : booklight.UI.showSection(booklight.urlsLazyloader.urlsDOM,false,true);
+				} else {
+					if (booklight.elementStack.length) {
+						 booklight.bookmarksList.find('li[data-parent="'+ booklight.elementStack[booklight.elementStack.length - 1].id + '"]').show();
+					} else booklight.context == "folder" ? booklight.UI.showSection(null, true, false, "url") : booklight.UI.showSection(booklight.urlsLazyloader.urlsDOM,false,true);
 				}
 
 				booklight.UI.updateCounter();
@@ -172,6 +173,7 @@ var booklight = function booklight() {
 		},close : function close() {
 
 				booklight.booklightBox.hide();
+				booklight.elementStack = [];
 				booklight.UI.showSection(null, true, false, "url");
 
 		},showContext: function showHideContext() {
@@ -253,6 +255,7 @@ var booklight = function booklight() {
 				booklight.UI.updateCounter();
 				booklight.searchBar.val('');
 				id && booklight.elementStack.length ? booklight.UI.focusItem(id) : booklight.UI.higlightFirstElement(isFolder);
+
 		}, isRoot: function(){
 			 if (booklight.searchBar.attr('placeholder').indexOf('>') === -1) return true;
 			 	else return false;
@@ -275,6 +278,7 @@ var booklight = function booklight() {
 			 */
 			switch (direction) {
 				case ('DOWN') : {
+					console.log('DOWN');
 					index !== lastElementIndex ? booklight.UI.focusItem($('.booklight_list li:visible.activeFolder').nextAll('li:visible').first().index()) : booklight.UI.focusItem(firstElementIndex);
 					if (booklight.context == 'url' && index >= lastElementIndex - 3) {
 						// Now we have checked that we are in a url context and the urls have been lazyloaded, we need to fetch more
