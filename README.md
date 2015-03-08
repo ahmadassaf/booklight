@@ -13,7 +13,7 @@ To Launch press (ctrl/Control + b) and thats it
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
 
 ## Watch Booklight Video
-[![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=8AB1kE6U-2g)
+[![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=fxqaToLRLNo)
 
 ### Features
 
