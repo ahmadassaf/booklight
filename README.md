@@ -8,7 +8,8 @@ I got fed up wasting my time trying to navigate my way through bunch of bookmark
 
 then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark. 
 
-To Launch press (ctrl/Control + b) and thats it !
+To Launch press (ctrl/Control + b) and thats it
+
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
 
 ## Watch Booklight Video
@@ -76,5 +77,6 @@ You can tweak the number of elements you want to show on every iteration and it 
 - ~~Add fuzzy search for filtering from input box~~
 - Smart folder suggestions
 - ~~Remember last location when going back to main screen or removing filters~~ **done**
-- 
+
+
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
