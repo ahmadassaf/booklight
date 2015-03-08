@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "Booklight",
-  "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: cmd+b (win:ctrl+b)",
-  "version": "1.2.4",
+  "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: control+b (win:ctrl+b)",
+  "version": "2",
   "author": "Ahmad Assaf",
   "homepage_url": "https://github.com/ahmadassaf/booklight",
   "background": {
