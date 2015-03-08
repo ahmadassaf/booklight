@@ -139,7 +139,7 @@ var booklight = function booklight() {
 				this.load = function(empty, hide) {
 
 					var urlsDOM             = '';
-					var currentAttachedUrls = this.urlsDOM == '' ? 0 : $('.booklight_list li[data-type="url"]').length;
+					var currentAttachedUrls = this.urlsDOM == '' ? 0 : $('.booklight_list li[data-type="url"]:visible').length;
 					var limit               = this.elements.length > this.showLimit ? this.showLimit : this.elements.length;
 					var urlsToAdd           = this.elements.slice(currentAttachedUrls, currentAttachedUrls + limit);
 
@@ -283,7 +283,8 @@ var booklight = function booklight() {
 					if (booklight.context == 'url' && index >= lastElementIndex - 3) {
 						// Now we have checked that we are in a url context and the urls have been lazyloaded, we need to fetch more
 						// We need now to check if the lazy loader is for search results or for normal urls fetch
-						booklight.searchBar.val().length == 1 ? booklight.urlsLazyloader.load(false, false) : booklight.searchLazyLoader.load(false, false);
+						console.log(booklight.searchBar.val().length > 1);
+						booklight.searchBar.val().length > 1 ? booklight.searchLazyLoader.load(false, false) : booklight.urlsLazyloader.load(false, false) ;
 					}
 				} break;
 				case ('UP') : {
