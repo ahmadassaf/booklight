@@ -3,7 +3,7 @@
 
   "name": "Booklight",
   "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: control/ctrl+b",
-  "version": "2.1",
+  "version": "2.2",
   "author": "Ahmad Assaf",
   "homepage_url": "https://github.com/ahmadassaf/booklight",
   "background": {
