@@ -143,17 +143,19 @@ var booklight = function booklight() {
 					var limit               = this.elements.length > this.showLimit ? this.showLimit : this.elements.length;
 					var urlsToAdd           = this.elements.slice(currentAttachedUrls, currentAttachedUrls + limit);
 
-					// the idea is build a kind of lazy loading for urls to minimize the building of the DOM elements
-					urlsToAdd.forEach(function(url){
-						urlsDOM += '<li id="' + url.id + '" data-url="' + url.url + '" data-parent="' + url.parentId + '" data-type="url">' +
-						'<img src="http://www.google.com/s2/favicons?domain_url=' + url.url + '"</img>' +
-						url.title + '</li>';
-					});
+					if (urlsToAdd.length) {
+						// the idea is build a kind of lazy loading for urls to minimize the building of the DOM elements
+						urlsToAdd.forEach(function(url){
+							urlsDOM += '<li id="' + url.id + '" data-url="' + url.url + '" data-parent="' + url.parentId + '" data-type="url">' +
+							'<img src="http://www.google.com/s2/favicons?domain_url=' + url.url + '"</img>' +
+							url.title + '</li>';
+						});
 
-					lazyloader.urlsDOM += urlsDOM;
+						lazyloader.urlsDOM += urlsDOM;
 
-					booklight.UI.showSection(urlsDOM, empty, hide);
-					booklight.UI.updateCounter();
+						booklight.UI.showSection(urlsDOM, empty, hide);
+						booklight.UI.updateCounter();
+					}
 
 				}
 
@@ -280,12 +282,10 @@ var booklight = function booklight() {
 			 */
 			switch (direction) {
 				case ('DOWN') : {
-					console.log('DOWN');
 					index !== lastElementIndex ? booklight.UI.focusItem($('.booklight_list li:visible.activeFolder').nextAll('li:visible').first().index()) : booklight.UI.focusItem(firstElementIndex);
 					if (booklight.context == 'url' && index >= lastElementIndex - 3) {
 						// Now we have checked that we are in a url context and the urls have been lazyloaded, we need to fetch more
 						// We need now to check if the lazy loader is for search results or for normal urls fetch
-						console.log(booklight.searchBar.val().length > 1);
 						booklight.searchBar.val().length > 1 ? booklight.searchLazyLoader.load(false, false) : booklight.urlsLazyloader.load(false, false) ;
 					}
 				} break;
