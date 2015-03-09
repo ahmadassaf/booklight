@@ -109,7 +109,7 @@ var booklight = function booklight() {
 
 				// Get the bookmarks folders from the local storage
 				chrome.storage.local.get("booklightFolders", function(bookmarks) {
-					booklight.fuzzyFolderSearch = new Fuse(bookmarks.booklightFolders, { keys: ['title'], threshold: 0.4});
+					booklight.fuzzyFolderSearch = new Fuse(bookmarks.booklightFolders, { keys: ['title'], threshold: 0.3});
 					bookmarks.booklightFolders.forEach(function(bookmark){
 						booklight.foldersDOM += '<li id="' + bookmark.id + '" data-dateGroupModified="' + bookmark.dateGroupModified + '" data-parent="' + bookmark.parentId + '" data-type="folder"';
 						if (!bookmark.folder) booklight.foldersDOM += 'class="isFolder"';
@@ -254,7 +254,9 @@ var booklight = function booklight() {
 
 				booklight.UI.updateCounter();
 				booklight.searchBar.val('');
-				id && booklight.elementStack.length ? booklight.UI.focusItem(id) : booklight.UI.higlightFirstElement(isFolder);
+
+				isFolder ? booklight.UI.higlightFirstElement(isFolder) : booklight.UI.focusItem(id);
+				//id && booklight.elementStack.length ? booklight.UI.focusItem(id) : booklight.UI.higlightFirstElement(isFolder);
 
 		}, isRoot: function(){
 			 if (booklight.searchBar.attr('placeholder').indexOf('>') === -1) return true;
