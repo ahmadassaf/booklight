@@ -8,7 +8,8 @@ I got fed up wasting my time trying to navigate my way through bunch of bookmark
 
 then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark. 
 
-To Launch press (ctrl/Control + b) and thats it
+To launch press (ctrl/Control + b)
+To enable bookmarks search mode hit `space` after booklight is launched
 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
 
