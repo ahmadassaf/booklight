@@ -82,3 +82,8 @@ You can tweak the number of elements you want to show on every iteration and it 
 
 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
+
+### Thoughts
+
+ - [Google Chrome’s awful new bookmark manager (and how to switch it off)](http://blog.garethjmsaunders.co.uk/2015/04/19/google-chromes-awful-new-bookmark-manager-and-how-to-switch-it-off/)
+ - [Chrome users roast Google on spit of hate over revamped bookmarks manager](http://www.computerworld.com/article/2913426/web-browsers/chrome-users-roast-google-on-spit-of-hate-over-revamped-bookmarks-manager.html)
