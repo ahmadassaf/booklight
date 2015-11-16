@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "Booklight",
-  "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: cmd+b (win:ctrl+b)",
-  "version": "1.1",
+  "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: control/ctrl+b",
+  "version": "2.2.1",
   "author": "Ahmad Assaf",
   "homepage_url": "https://github.com/ahmadassaf/booklight",
   "background": {
@@ -30,8 +30,8 @@
       "css": ["css/booklight.css", "css/fontello.css"],
       "js": [
         "lib/jquery.js",
-        "lib/hideSeek.js",
-        "lib/keymaster.js",
+        "lib/fuse.js",
+        "lib/keyboard.js",
         "helper.js",
         "booklight.js"
         ],
