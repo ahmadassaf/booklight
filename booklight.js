@@ -30,6 +30,10 @@ var booklight = function booklight() {
 		booklightListener.simple_combo('down', function(){ booklight.navigator.moveInList("DOWN") });
 		booklightListener.simple_combo('right', function(){ booklight.navigator.moveInList("RIGHT") });
 		booklightListener.simple_combo('left', function(){ booklight.navigator.moveInList("LEFT") });
+		booklightListener.simple_combo('ctrl k', function(){ booklight.navigator.moveInList("UP") });
+		booklightListener.simple_combo('ctrl j', function(){ booklight.navigator.moveInList("DOWN") });
+		booklightListener.simple_combo('ctrl l', function(){ booklight.navigator.moveInList("RIGHT") });
+		booklightListener.simple_combo('ctrl h', function(){ booklight.navigator.moveInList("LEFT") });
 
 	}
 
