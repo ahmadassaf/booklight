@@ -8,7 +8,8 @@ I got fed up wasting my time trying to navigate my way through bunch of bookmark
 
 then you came to the right place. **Booklight** is a clean Chrome Extension to ease the way of adding a bookmark. 
 
-To Launch press (ctrl/Control + b) and thats it
+- To launch press (ctrl/Control + b)
+- To enable bookmarks search mode hit `space` after booklight is launched
 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
 
@@ -27,14 +28,14 @@ To Launch press (ctrl/Control + b) and thats it
 - Fuzzy search enabled for filtering on both folders and urls **NEW**
 - Clean current URL before bookmarking (sometimes the url is polluted with query strings e.g `?source= ...` for various tracking information). To clean the url from those, hit `ctrl+alt+x` and this will solve this issue.
 
-![booklight](http://g.recordit.co/CP32P1AZwl.gif)
+![booklight](http://g.recordit.co/ZsvnnFqYdu.gif)
 
 ## Bookmark Search & launch
 
 Booklight now has the ability to search on your bookmakrs **and it is blazing fast**. I have around 20,000 bookmarks ! and through smart lazy loading and fuzzy search, you can now easily search and launch bookmarks anywhere while browsing.
 To switch to the url search mode just hit `space` and then you will see that you can now search urls by having the `|` symbol in the input box.
 To launch a url in the current window, simply hit `enter` and to open it in a new tab hit `ctr\control + enter`
-![booklight-urls](http://g.recordit.co/nDU3F0WslP.gif)
+![booklight-urls](http://g.recordit.co/aala9MAKo9.gif)
 
 ### Booklight Performance
 I currently have over 1000 folders and 20,000 bookmarked urls. Booklight is blazing fast, to achieve this i implement various hacks to minimize DOM manipulations and most importantly lazy-loading of urls. The lazy loading happens in the following function:
@@ -81,3 +82,8 @@ You can tweak the number of elements you want to show on every iteration and it 
 
 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
+
+### Thoughts
+
+ - [Google Chrome’s awful new bookmark manager (and how to switch it off)](http://blog.garethjmsaunders.co.uk/2015/04/19/google-chromes-awful-new-bookmark-manager-and-how-to-switch-it-off/)
+ - [Chrome users roast Google on spit of hate over revamped bookmarks manager](http://www.computerworld.com/article/2913426/web-browsers/chrome-users-roast-google-on-spit-of-hate-over-revamped-bookmarks-manager.html)
