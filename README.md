@@ -12,9 +12,7 @@ then you came to the right place. **Booklight** is a clean Chrome Extension to e
 - To enable bookmarks search mode hit `space` after booklight is launched
 
 [Download from Chrome Store](https://chrome.google.com/webstore/detail/booklight/lkdhojpobehkcldjmileiancjjpdeakk)
-
-## Watch Booklight Video
-[![booklightVideo](https://www.dropbox.com/s/dgu57k0424rnjhq/booklight_video.png?dl=1)](https://www.youtube.com/watch?v=fxqaToLRLNo)
+[Watch YouTube Video](https://www.youtube.com/watch?v=fxqaToLRLNo)
 
 ### Features
 
