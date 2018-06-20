@@ -26,7 +26,7 @@ then you came to the right place. **Booklight** is a clean Chrome Extension to e
 - Fuzzy search enabled for filtering on both folders and urls **NEW**
 - Clean current URL before bookmarking (sometimes the url is polluted with query strings e.g `?source= ...` for various tracking information). To clean the url from those, hit `ctrl+alt+x` and this will solve this issue.
 
-![booklight](https://dl.dropboxusercontent.com/u/5258344/Blog/booklight_main.gif)
+![booklight](https://preview.ibb.co/bUQqPd/booklight_main.gif)
 
 ## Bookmark Search & launch
 
@@ -34,7 +34,7 @@ Booklight now has the ability to search on your bookmakrs **and it is blazing fa
 To switch to the url search mode just hit `space` and then you will see that you can now search urls by having the `|` symbol in the input box.
 To launch a url in the current window, simply hit `enter` and to open it in a new tab hit `ctr\control + enter`
 
-![booklight-urls](https://dl.dropboxusercontent.com/u/5258344/Blog/booklight.gif)
+![booklight-urls](https://preview.ibb.co/dgVqPd/booklight.gif)
 
 ### Booklight Performance
 I currently have over 1000 folders and 20,000 bookmarked urls. Booklight is blazing fast, to achieve this i implement various hacks to minimize DOM manipulations and most importantly lazy-loading of urls. The lazy loading happens in the following function:
